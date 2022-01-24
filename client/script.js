@@ -2,6 +2,7 @@
 //THE TEST SERVER IS RUNNING ON LOCALHOST:3000//
 ////////////////////////////////////////////////
 
+
 // PROBLEM 1
 /*
     In the index.html file in this folder there is a button with an id of 'say-hello-button'!
@@ -11,7 +12,8 @@
 
 // CODE HERE
 
-const sayHelloButton = document.querySelector('#say-hello-button')
+let sayHelloButton = document.querySelector('#say-hello-button');
+// console.log(sayHelloButton)
 
 
 // PROBLEM 2
@@ -22,6 +24,20 @@ const sayHelloButton = document.querySelector('#say-hello-button')
 */
 
 // CODE HERE
+
+// function changeColor (){
+//     sayHelloButton.style.backgroundColor = "black"
+//     sayHelloButton.style.color = "white"
+// }
+// sayHelloButton.addEventListener('mouseover',changeColor)
+
+
+const changeColor = (evt) =>{
+    sayHelloButton.style.backgroundColor = "black";
+    sayHelloButton.style.color = "white";
+};
+sayHelloButton.addEventListener('mouseover',changeColor);
+
 
 
 // PROBLEM 3
@@ -34,6 +50,11 @@ const sayHelloButton = document.querySelector('#say-hello-button')
 */
 
 // CODE HERE
+const btn1og = (evt) =>{
+    evt.target.style.backgroundColor = "#EFEFEF";
+    evt.target.style.color = "black";
+}
+sayHelloButton.addEventListener('mouseout',btn1og);
 
 
 // PROBLEM 4
@@ -56,6 +77,7 @@ const sayHello = () => {
 
 // CODE HERE
 
+sayHelloButton.addEventListener('click',sayHello);
 
 // PROBLEM 5 
 /*
@@ -70,7 +92,16 @@ const sayHello = () => {
 
 const ohMy = () => {
     // YOUR CODE HERE
+    axios
+    .get('http://localhost:3000/animals')
+    .then(res => {
+        const ani = document.getElementById('animals-button');
+        ani.textContent = res.data;
+        console.log(res.data)
+    })
+    .catch(err => console.log(err));
 }
+
 
 document.getElementById('animals-button').addEventListener('click', ohMy)
 
@@ -90,7 +121,19 @@ document.getElementById('animals-button').addEventListener('click', ohMy)
 
 const repeatMyParam = () => {
     //YOUR CODE HERE
+    axios 
+    .get('http://localhost:3000/repeat/pam')
+    .then((res => {
+        console.log(res.data)
+    }))
+    let repText = document.getElementById('repeat-text');
+    repText.style.display = 'block'
+    repText.textContent = 'Success!  pam was sent as a param!'
+
+    
 }
+const rep = document.querySelector('#repeat-button')
+rep.addEventListener('click',repeatMyParam)
 
 // PROBLEM 7
 /*
@@ -113,9 +156,13 @@ const repeatMyParam = () => {
 */
 
 // CODE HERE
+const query = () => {
+    axios
+        .get('http://localhost:3000/?test');
 
-
-
+}
+const sendQ =document.querySelector('#query-button');
+sendQ.addEventListener('click',query);
 ////////////////
 //INTERMEDIATE//
 ////////////////
@@ -166,3 +213,31 @@ const repeatMyParam = () => {
 */
 
 // CODE HERE 
+// In the index.html file inside of the client folder, create a form with one text input field and a button. The input field should have a placeholder that tells the user to enter a food. And the button should indicate that it will add food into a list. 
+
+//     In this file (script.js), create a function called createFood. 
+function createFood() {
+ const foodInput = document.querySelector('#add-food')
+
+    const body = {
+        newFood: foodInput.value
+    }
+
+    axios
+        .post('http://localhost:3000/food', body)
+        .then(function(res) {
+            console.log(res.data)
+
+            const foodList =document.querySelector('section')
+            foodList.innerHTML = '';
+
+            res.data.forEach(foodStr => {
+                const newP =document.createElement('p')
+                newP.textContent = foodStr;
+
+                foodList.appendChild(newP)
+            })
+        })
+        .catch(err => console.log(err))
+}
+document.querySelector('form').addEventListener('sumit', createFood)
